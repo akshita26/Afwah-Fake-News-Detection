@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>
+            Afwah
+        </title>
+        <!-- Bootstrap core CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Material Design Bootstrap -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.3/css/mdb.min.css" rel="stylesheet">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+<!--        favicon-->
+        <link rel="shortcut icon" type="image/png" href="https://pluspng.com/img-png/avengers-logo-png-avengers-logo-png-1376.png"/>
+        
+        <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+        
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        
+        <script>
+                
+            function serializeForm() {
+//                console.log("choice" + document.getElementById("choice:").value);
+                
+                //if choice is text
+                if(document.getElementById("choice").value == "textz") {
+                    document.getElementById("outimage").style.display = 'none';
+                    querystring = document.getElementById("txinp").value;
+                    console.log("qs:" + querystring);
+                    sendText(querystring); 
+                }
+                
+                //if choice is morphed image or ocr
+                if(document.getElementById("choice").value == "image" || document.getElementById("choice").value == "ocr") {
+                    
+                    var flag;
+                    
+                    if(document.getElementById("choice").value == "image")
+                        flag = 'image';
+                    else
+                        flag = 'ocr';
+                    
+                    //get image name
+                    var imgFile = document.getElementById("pic").value;
+                    imgFile = String(imgFile).split('\\')
+                    console.log(imgFile[2]);
+//                    sendImage(imgFile);
+//                    DownloadFile();
+                    
+                    //Print image on page
+                    var filesSelected = document.getElementById("pic").files;
+                    if (filesSelected.length > 0)
+                    {
+                        var fileToLoad = filesSelected[0];
+
+                        if (fileToLoad.type.match("image.*"))
+                        {
+                            var fileReader = new FileReader();
+                            fileReader.onload = function(fileLoadedEvent) 
+                            {
+                                var imageLoaded = document.getElementById("outimage");
+                                imageLoaded.src = fileLoadedEvent.target.result;   
+//                                imageLoaded.id = "imgLoaded";
+//                                document.body.appendChild(imageLoaded);
+                                
+                                imageLoaded.width = "300";
+                                imageLoaded.style.margin = "50px";
+                            };
+                            fileReader.readAsDataURL(fileToLoad);
+                        }
+                    }
+                    
+                    sendImage(imgFile[2], flag);
+                    
+                }
+            }
+            
+            function sendText(querystring) {
+                
+            var request = $.ajax({
+                method: "GET",
+                contentType: "json",
+                url: '/text?inpText=' + querystring
+            });
+            request.done(function(response) {
+                var x = document.getElementById("out");
+//                response = JSON.parse(response);
+             
+                x.innerHTML = response;
+               
+//                suggest(response.options);
+                });
+            }
+            
+            function sendImage(querystring, flag) {
+                
+            var request = $.ajax({
+                method: "GET",
+                contentType: "json",
+                url: '/image?imgFile=' + querystring + "&flag=" + flag
+            });
+            request.done(function(response) {
+                var x = document.getElementById("out");
+//                response = JSON.parse(response);
+             
+                x.innerHTML = response;
+               
+//                suggest(response.options);
+                });
+            }
+            
+            function init() {
+                
+                var dispImg = document.getElementById("imgInp");
+                dispImg.style.display = 'none';
+
+            }
+            
+            function input() {
+                console.log(document.getElementById("choice").value);
+                var dispText = document.getElementById("textInp");
+                
+//                var dispOCR = document.getElementById("ocrInp");
+//                dispUrl.style.display = 'none';
+                
+                var dispImg = document.getElementById("imgInp");
+                dispImg.style.display = 'none';
+                
+                //Image input
+                if(document.getElementById("choice").value == "image" || document.getElementById("choice").value == "ocr") {
+                    dispText.style.display = "none";
+//                    dispOCR.style.display = 'none';
+                    dispImg.style.display = 'block';
+                    //dispVid.style.display = 'none';
+                }
+
+                //Text input
+                else {
+//                    document.getElementById("outimage").style.display = 'none';
+                    dispText.style.display = 'block';
+//                    dispOCR.style.display = 'none';
+                    dispImg.style.display = 'none';
+                    //dispVid.style.display = 'none';
+                }   
+            }
+        </script>
+        </head>
+        <body onload="init()">
+        <div class = "container">
+            <br>
+            <nav class="navbar navbar-expand-lg navbar-dark  fixed-top" style="background-color: #80002b">
+                <b><h1 style="font-family: Verdana, Geneva, sans-serif; font-size: 45px; color: aliceblue">Afwah&nbsp;<h3 style="color: aliceblue; font-size: 14px;"><i>"The enemy of truth is blind acceptance."<p style="text-align: right">- Matthew Arnold</p></i></h3></h1></b>
+            </nav>
+            <br><br><br><br><br>
+            
+            <b><p style="font-size: 18px">Afwah is a fake news tracking tool which aims to provide its users with accurate classification of textual, image, video and hyperlinks in order to avoid the spread of misinformation.</p></b>
+            
+            <br>
+            
+            <form method="GET" action="" name="formz" id="input">
+        
+            <div class="form-group">
+                <label for="lang" style="font-size: 18px">
+                    <b>
+                    Select input type:
+                    </b>
+                </label>
+                <select class="form-control" name="choice" id="choice" onchange="input()">
+                    <option value="textz">Text</option>
+                    <option value="image">Morphed Image</option>
+                    <option value="ocr">Text on Image</option>
+                    <!--<option value="video">Video</option>-->
+                </select>
+            </div>
+            <br>
+
+            <div id="textInp">
+                <label for="txinp" style="font-size: 18px">
+                <b>
+                    Enter text to be checked: 
+                </b>
+                </label>
+                <textarea rows="5" id="txinp" name="txinp" form="input" class="form-control" autocomplete="off"></textarea>
+            </div>
+                
+                
+            <div id="imgInp">
+                <label for="pic">
+                <b>
+                    Upload Image:
+                </b>
+                </label>
+                <input type="file" name="pic" id="pic" accept="image/*">    
+            </div>
+                 
+            <br>
+            <input type="button" value="Check" class="btn" onclick="serializeForm()" style="background-color: #80002b; color: aliceblue">
+
+            </form>
+            <br>
+<!--            Output-->
+            <p id="out"></p>
+            
+            <img id="outimage">
+        </div>
+        <footer style="position: fixed; left: 0; bottom: 0; width: 100%; height: 3%" class="page-footer font-small darken-3;">
+          <!-- Footer Elements -->
+          <div class="footer-copyright text-center py-1" style="background-color: #80002b">
+              Team DevDos
+          </div>
+
+          </footer>
+
+    </body>
+</html>

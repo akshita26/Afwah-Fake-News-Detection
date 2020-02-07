@@ -1,0 +1,1 @@
+when selecting image choice after selecting text and then selecting text back, image is not displayed

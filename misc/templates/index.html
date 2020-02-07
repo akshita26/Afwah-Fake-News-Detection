@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>
+            Afwah
+        </title>
+        <!-- Bootstrap core CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Material Design Bootstrap -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.3/css/mdb.min.css" rel="stylesheet">
+        
+        <!--        favicon-->
+        <link rel="shortcut icon" type="image/png" href="https://pluspng.com/img-png/avengers-logo-png-avengers-logo-png-1376.png"/>
+        
+        <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+        
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        
+        <script>
+            function init() {
+                
+                var dispUrl = document.getElementById("urlInp");
+                dispUrl.style.display = 'none';
+                
+                var dispImg = document.getElementById("imgInp");
+                dispImg.style.display = 'none';
+                
+//                var dispVid = document.getElementById("vidInp");
+//                dispVid.style.display = 'none';
+            }
+            
+            function input() {
+                console.log(document.getElementById("choice").value);
+                var dispText = document.getElementById("textInp");
+                
+                var dispUrl = document.getElementById("urlInp");
+                dispUrl.style.display = 'none';
+                
+                var dispImg = document.getElementById("imgInp");
+                dispImg.style.display = 'none';
+                
+//                var dispVid = document.getElementById("vidInp");
+//                dispVid.style.display = 'none';
+                
+                //URL input
+                if(document.getElementById("choice").value == "url") {
+                    dispText.style.display = "none";
+                    dispUrl.style.display = 'block';
+                    dispImg.style.display = "none";
+                    //dispVid.style.display = "none";
+                }
+                //Image input
+                else if(document.getElementById("choice").value == "image") {
+                    dispText.style.display = "none";
+                    dispUrl.style.display = 'none';
+                    dispImg.style.display = 'block';
+                    //dispVid.style.display = 'none';
+                }
+                //Video input
+                else if(document.getElementById("choice").value == "video") {
+                    dispText.style.display = "none";
+                    dispUrl.style.display = 'none';
+                    dispImg.style.display = 'none';
+                    //dispVid.style.display = 'block';
+                }
+                //Text input
+                else {
+                    dispText.style.display = 'block';
+                    dispUrl.style.display = 'none';
+                    dispImg.style.display = 'none';
+                    //dispVid.style.display = 'none';
+                }   
+            }
+        </script>
+        
+    </head>
+    
+    <body onload="init()">
+        <div class = "container">
+            <br>
+            <h5 style="font-family: Verdana, Geneva, sans-serif; font-size: 45px;"><center>Afwah</center></h5>
+            <br>
+       
+            <form method="post" action="/text" name="formz" id="input">
+        
+            <div class="form-group">
+                <label for="lang">
+                    <b>
+                    Select input type:
+                    </b>
+                </label>
+                <select class="form-control" name="choice" id="choice" onchange="input()">
+                    <option value="textz">Text</option>
+                    <option value="url">URL</option>
+                    <option value="image">Image</option>
+                    <!--<option value="video">Video</option>-->
+                </select>
+            </div>
+            <br>
+
+            <div id="textInp">
+                <label for="txinp">
+                <b>
+                    Enter text to be checked: 
+                </b>
+                </label>
+                <textarea rows="5" id="txinp" name="txinp" form="input" class="form-control" autocomplete="off"></textarea>
+            </div>
+                
+            <div id="urlInp">
+                <label for="uinp">
+                <b>
+                    Enter URL to be checked: 
+                </b>
+                </label>
+                <input type="text" form="input" class="form-control" autocomplete="off">
+            </div>
+                
+            <div id="imgInp">
+                <label for="pic">
+                <b>
+                    Upload Image:
+                </b>
+                </label>
+                <input type="file" name="pic" form="input" id="pic" accept="image/*">    
+            </div>
+                
+<!--
+            <div id="vidInp">
+                <label for="vid">
+                <b>
+                    Upload Video:
+                </b>
+                </label>
+                <input type="file" name="vid" id="vid" accept="video/*">    
+            </div>
+-->
+                
+                <br>
+            <input type="submit" value="Check" class="btn btn-primary">
+
+            </form>
+            
+            <p id="out">{{ textCheck }}</p>
+        </div> 
+    </body>
+</html>
